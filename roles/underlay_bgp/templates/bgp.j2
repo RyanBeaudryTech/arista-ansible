@@ -1,0 +1,8 @@
+router bgp {{ bgp_asn }}
+   router-id {{ loopback0 }}
+   maximum-paths 4 ecmp 4
+{% for link in p2p_links %}
+   neighbor {{ link.peer_ip }} remote-as {{ link.peer_asn }}
+   neighbor {{ link.peer_ip }} description {{ link.description }}
+{% endfor %}
+   network {{ loopback0 }}/32

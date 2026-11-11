@@ -1,0 +1,5 @@
+loopback0: 10.0.0.2
+bgp_asn: 65000
+p2p_links:
+  - { interface: Ethernet1, ip: 10.1.2.0, peer_ip: 10.1.2.1, peer_asn: 65001, description: to-leaf1 }
+  - { interface: Ethernet2, ip: 10.1.2.2, peer_ip: 10.1.2.3, peer_asn: 65002, description: to-leaf2 }

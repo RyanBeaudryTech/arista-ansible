@@ -1,0 +1,12 @@
+ip routing
+!
+interface Loopback0
+   ip address {{ loopback0 }}/32
+!
+{% for link in p2p_links %}
+interface {{ link.interface }}
+   description {{ link.description }}
+   no switchport
+   ip address {{ link.ip }}/31
+!
+{% endfor %}

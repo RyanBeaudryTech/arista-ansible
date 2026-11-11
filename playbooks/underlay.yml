@@ -1,0 +1,6 @@
+- name: Build the spine-leaf underlay
+  hosts: all
+  gather_facts: false
+  roles:
+    - underlay_interfaces
+    - underlay_bgp
