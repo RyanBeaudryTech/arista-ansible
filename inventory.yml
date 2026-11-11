@@ -1,0 +1,11 @@
+all:
+  children:
+    spines:
+      hosts:
+        clab-arista-lab-spine1:
+        clab-arista-lab-spine2:
+    leaves:
+      hosts:
+        clab-arista-lab-leaf1:
+        clab-arista-lab-leaf2:
+    

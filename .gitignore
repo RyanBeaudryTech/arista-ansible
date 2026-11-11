@@ -1,0 +1,10 @@
+# Containerlab runtime folder (generated on deploy)
+clab-arista-lab/
+*.clab.yml.bak
+
+# Never commit the cEOS image
+*.tar
+*.tar.xz
+
+# Ansible leftovers
+*.retry

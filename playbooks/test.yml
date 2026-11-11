@@ -1,0 +1,14 @@
+- name: Verify eAPI connectivity
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get EOS version
+      arista.eos.eos_command:
+        commands:
+          - command: show version
+            output: json
+      register: ver
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} running {{ ver.stdout[0].version }}"
