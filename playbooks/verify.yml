@@ -1,0 +1,5 @@
+  - name: Verify the spine-leaf fabric
+    hosts: all
+    gather_facts: false
+    roles:
+      - verify_fabric

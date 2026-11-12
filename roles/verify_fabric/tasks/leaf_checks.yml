@@ -1,0 +1,38 @@
+- name: Build list of other leaves' loopbacks
+  ansible.builtin.set_fact:
+    remote_loopbacks: "{{ groups['leaves'] | difference([inventory_hostname]) | map('extract', hostvars, 'loopback0') | list }}"
+
+- name: Get routes to remote leaf loopbacks
+  arista.eos.eos_command:
+    commands:
+      - command: "show ip route {{ item }}/32"
+        output: json
+  loop: "{{ remote_loopbacks }}"
+  register: routes
+
+- name: Assert ECMP through every spine
+  ansible.builtin.assert:
+    that:
+      - (item.stdout[0].vrfs.default.routes[item.item ~ '/32'].vias | length) == (groups['spines'] | length)
+    fail_msg: "Route to {{ item.item }} does not have {{ groups['spines'] | length }} ECMP paths"
+    success_msg: "Route to {{ item.item }} has {{ groups['spines'] | length }} ECMP paths"
+  loop: "{{ routes.results }}"
+  loop_control:
+    label: "{{ item.item }}"
+
+- name: Ping remote leaf loopbacks from local loopback
+  arista.eos.eos_command:
+    commands:
+      - "ping {{ item }} source {{ loopback0 }} repeat 3"
+  loop: "{{ remote_loopbacks }}"
+  register: pings
+
+- name: Assert pings succeeded
+  ansible.builtin.assert:
+    that:
+      - "' 0% packet loss' in item.stdout[0]"
+    fail_msg: "Ping to {{ item.item }} failed"
+    success_msg: "Ping to {{ item.item }} succeeded"
+  loop: "{{ pings.results }}"
+  loop_control:
+    label: "{{ item.item }}"

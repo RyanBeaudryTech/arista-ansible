@@ -1,0 +1,20 @@
+- name: Get BGP summary
+  arista.eos.eos_command:
+    commands:
+      - command: show ip bgp summary
+        output: json
+  register: bgp
+
+- name: Assert every BGP neighbor is Established
+  ansible.builtin.assert:
+    that:
+      - bgp.stdout[0].vrfs.default.peers[item.peer_ip].peerState == 'Established'
+    fail_msg: "BGP to {{ item.description }} ({{ item.peer_ip }}) is NOT Established"
+    success_msg: "BGP to {{ item.description }} is Established"
+  loop: "{{ p2p_links }}"
+  loop_control:
+    label: "{{ item.peer_ip }}"
+
+- name: Run leaf-only checks
+  ansible.builtin.include_tasks: leaf_checks.yml
+  when: inventory_hostname in groups['leaves']
