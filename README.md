@@ -7,7 +7,7 @@ The goal of this project is to treat the network as code: the topology, IP plan,
 
 ## Topology
 
-![Topology](docs/topology.png)
+![Topology](topology.png)
 
 - **2 spines, 2 leaves**, running Arista cEOS-lab 4.36.3.2M
 - Every leaf connects to every spine. Spines do not connect to each other, and leaves do not connect to each other.
